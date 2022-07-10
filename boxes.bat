@@ -13,12 +13,11 @@ set /A qtyinpartialbox=parts%%qtyperbox
 if %qtyinpartialbox% gtr 0 set /A totalboxes+=1
 set /A box=1
 set /A page_offset=0
-set SVGFile="%lot%_%PN%_%parts%_%totalboxes%x%qtyperbox%.svg"
-set SVGTemp="boxes_temp.svg"
 set /A numberofpages=totalboxes/40
 set /A lastpage=totalboxes%%40
 if %lastpage% gtr 0 set /A numberofpages+=1
 set /A svgheight=numberofpages*1056
+call :makeSVGfilename
 call :makeSVGhead
 
 :newpage
@@ -62,6 +61,16 @@ set /A x-=10
 set /A y-=10
 call :makeSVGpartialcount %x% %y% %qtyinpartialbox%
 goto :eof
+
+:makeSVGfilename
+rem Use the date and time stamp to create a unique file name.
+rem Do not use the part number to avoid its sanitization.
+
+for /F "usebackq tokens=1,2" %%I in (`date /t`) do (set _d=%%J)
+for /F "usebackq tokens=1,2" %%I in (`time /t`) do (set _t=%%I%%J)
+set SVGFile="%lot%_%parts%_%qtyperbox%x%totalboxes%_%_d:/=%_%_t::=%.svg"
+goto :eof
+
 
 :finish
 call :makeSVGfooter
@@ -114,4 +123,5 @@ goto :eof
 :usage
 echo Usage:
 echo     boxes.bat lot_number part_number total_parts parts_per_box
+echo Creates an SVG file with a list of boxes.
 goto :eof
