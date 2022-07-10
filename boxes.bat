@@ -5,7 +5,6 @@ if {%2}=={} goto usage
 if {%3}=={} goto usage
 if {%4}=={} goto usage
 set lot=%1
-set PN=%2
 set /A parts=%3
 set /A qtyperbox=%4
 set /A totalboxes=parts/qtyperbox
@@ -18,6 +17,7 @@ set /A lastpage=totalboxes%%40
 if %lastpage% gtr 0 set /A numberofpages+=1
 set /A svgheight=numberofpages*1056
 call :makeSVGfilename
+call :escapeSVGspecialcharacters %2
 call :makeSVGhead
 
 :newpage
@@ -71,6 +71,15 @@ for /F "usebackq tokens=1,2" %%I in (`time /t`) do (set _t=%%I%%J)
 set SVGFile="%lot%_%parts%_%qtyperbox%x%totalboxes%_%_d:/=%_%_t::=%.svg"
 goto :eof
 
+:escapeSVGspecialcharacters
+rem Escape the ampersand, left angle bracket and right angle bracket
+rem in the part number.
+set _pn=%1
+set _pn=%_pn:&=^&amp;%
+set _pn=%_pn:<=^&lt;%
+set _pn=%_pn:>=^&gt;%
+set PN=%_pn%
+goto :eof
 
 :finish
 call :makeSVGfooter
@@ -99,7 +108,7 @@ goto :eof
 
 :makepageheader
 echo   ^<text x="96" y="%1" class="medium"^>Lot:  %lot% ^</text^> >>%SVGFile%
-echo   ^<text x="400" y="%1" class="medium"^>Part Number:  %PN% ^</text^> >>%SVGFile%
+echo   ^<text x="400" y="%1" class="medium"^>Part Number:  %PN:"=% ^</text^> >>%SVGFile%
 echo   ^<text x="96" y="%2" class="medium"^>Total Parts:  %parts% ^</text^> >>%SVGFile%
 echo   ^<text x="400" y="%2" class="medium"^>Qty Per Box:  %qtyperbox% ^</text^> >>%SVGFile%
 echo   ^<text x="640" y="%2" class="medium"^>Boxes:  %totalboxes% ^</text^> >>%SVGFile%
