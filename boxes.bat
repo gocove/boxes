@@ -30,7 +30,7 @@ set /A y_line2=page_offset+60
 call :makepageheader %y_line1% %y_line2%
 
 for %%Y in (96, 216, 332, 452, 572, 692, 812, 932) do (
-  for %%X in (96, 240, 384, 528, 672) do (
+  for %%X in (72, 216, 360, 504, 648) do (
     if !box! equ !totalboxes! (
       if !qtyinpartialbox! equ 0 (call :makebox %%X %%Y
       ) else ( call :makepartialbox %%X %%Y )
