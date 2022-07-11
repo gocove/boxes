@@ -19,14 +19,24 @@ save
 	/part_number (0040-008-123) def
 	/total_parts (255,000) def
 	/qty_per_box (1,400) def
+
+	% Shade required fields
+	gsave
+		0.95 setgray
+		% Partial box
+		newpath 64 27 moveto 64 700 lineto
+		162 700 lineto 162 27 lineto closepath fill
+		% Date, shift, operator 
+		newpath 376 27 moveto 376 700 lineto
+		504 700 lineto 504 27 lineto closepath fill
+	grestore
+
 	/n 24 def
 	1 setlinewidth
 	1 1 n {
 		newpath
 		27 mul 64 exch moveto
 		512 0 rlineto stroke
-		
-		% (<C> computerphile>) show
 	} for
 
 	% The table outline
