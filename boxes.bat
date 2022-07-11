@@ -1,12 +1,16 @@
 @echo off
 setlocal EnableDelayedExpansion
-if {%1}=={} goto usage
-if {%2}=={} goto usage
-if {%3}=={} goto usage
-if {%4}=={} goto usage
+if not {%1}=={} if not {%2}=={} if not {%3}=={} if not {%4}=={} goto start
+goto usage
+
+:start
 set lot=%1
-set /A parts=%3
-set /A qtyperbox=%4
+call :validatenumber %3 total_parts
+if not defined _n goto usage
+set /A parts=_n
+call :validatenumber %4 parts_per_box
+if not defined _n goto usage
+set /A qtyperbox=_n
 set /A totalboxes=parts/qtyperbox
 set /A qtyinpartialbox=parts%%qtyperbox
 if %qtyinpartialbox% gtr 0 set /A totalboxes+=1
@@ -60,6 +64,17 @@ call :makeSVGline %x% %y_offset% %1 %y%
 set /A x-=10
 set /A y-=10
 call :makeSVGpartialcount %x% %y% %qtyinpartialbox%
+goto :eof
+
+:validatenumber
+set _n=%1
+set _n=%_n:,=%
+set _n=%_n:"=%
+set _nan=
+for /F "delims=0123456789" %%I in ("%_n%") do set _nan=%%J
+if not defined _nan if %_n% GTR 0 goto :eof
+echo %2 [%1] must be a natural number
+set _n=
 goto :eof
 
 :makeSVGfilename
