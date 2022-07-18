@@ -84,7 +84,14 @@ rem Do not use the part number to avoid its sanitization.
 for /F "usebackq tokens=1,2" %%I in (`date /t`) do (set _d=%%J)
 for /F "usebackq tokens=1,2" %%I in (`time /t`) do (set _t=%%I%%J)
 set SVGFile="%lot%_%parts%_%qtyperbox%x%totalboxes%_%_d:/=%_%_t::=%.svg"
-goto :eof
+set /A _count=0
+:checkfile
+if not exist %SVGFile% goto :eof
+set /A _count+=1
+if %_count% GTR 101 goto :makeSVGfilename
+set SVGFile="%lot%_%parts%_%qtyperbox%x%totalboxes%_%_d:/=%_%_t::=%_%_count%.svg"
+goto checkfile
+rem End of makeSVGfilename
 
 :escapeSVGspecialcharacters
 rem Escape the ampersand, left angle bracket and right angle bracket
