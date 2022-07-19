@@ -1,0 +1,92 @@
+%!PS-Adobe-1.0
+%%DocumentFonts:
+%%Title:
+%%Creator:
+%%CreationDate:
+%%Pages: (atend)
+%%BoundingBox: (atend)
+%%EndComments
+
+/Times-Roman findfont 20 scalefont setfont
+
+%%EndProlog
+
+%%Page: 1 1
+
+/lot_number () def
+/part_number () def
+/total_parts () def
+/qty_per_box () def
+
+save
+
+	% Shade required fields
+	gsave
+		0.95 setgray
+		% Partial box
+		newpath 64 27 moveto 64 700 lineto
+		162 700 lineto 162 27 lineto closepath fill
+		% Date, shift, operator 
+		newpath 376 27 moveto 376 700 lineto
+		504 700 lineto 504 27 lineto closepath fill
+	grestore
+
+	/n 24 def
+	1 setlinewidth
+	1 1 n {
+		newpath
+		27 mul 64 exch moveto
+		512 0 rlineto stroke
+	} for
+
+	% The table outline
+	newpath 64 27 moveto 64 700 lineto
+	576 700 lineto 576 27 lineto stroke
+	% Partial box (#, count)
+	newpath 108 668 moveto 108 27 lineto stroke
+	newpath 162 27 moveto 162 700 lineto stroke
+	% Partial box: horizontal line
+	newpath 64 668 moveto 162 668 lineto stroke
+	% Full boxes count
+	newpath 234 27 moveto 234 700 lineto stroke
+	% Complete total count
+	newpath 306 27 moveto 306 700 lineto stroke
+	% Good parts in 8 hours
+	newpath 376 27 moveto 376 700 lineto stroke
+	% Date, shift, operator
+	newpath 504 27 moveto 504 700 lineto stroke
+	newpath 446 27 moveto 446 648 lineto stroke
+	newpath 464 27 moveto 464 648 lineto stroke
+
+	% Table headings
+	/Times-Roman 14 selectfont
+	68 653 moveto (Box #) show
+	122 653 moveto (Parts) show
+	78 678 moveto (Partial Box) show
+	168 684 moveto (Total parts) show
+	178 668 moveto (in full) show
+	178 653 moveto (boxes) show
+	239 684 moveto (Total parts) show
+	240 668 moveto (competed) show
+	310 684 moveto (Good parts) show
+	312 668 moveto (in 8 hours) show
+	381 667 moveto (Date, Shift, Operator) show
+	510 684 moveto (Parts left) show
+	506 668 moveto (to complete) show
+	510 653 moveto total_parts show
+
+	/Times-Roman 20 selectfont
+
+	72 744 moveto (Lot#   ) show lot_number show
+	256 744 moveto (Part number:   ) show part_number show
+	
+	72 714 moveto (Qty per box:   ) show qty_per_box show
+	378 714 moveto (Parts:  ) show total_parts show
+restore showpage
+
+%%Trailer
+
+%%DocumentFonts: Times-Roman OCRA
+%%Pages: 1
+%%BoundingBox: 0 0 612 792
+
