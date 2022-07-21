@@ -20,6 +20,15 @@ set /A numberofpages=totalboxes/40
 set /A lastpage=totalboxes%%40
 if %lastpage% gtr 0 set /A numberofpages+=1
 set /A svgheight=numberofpages*1056
+
+rem Format numbers for output
+call :formatnumber %parts%
+set fparts=%_fn%
+call :formatnumber %qtyperbox%
+set fqtyperbox=%_fn%
+call :formatnumber %totalboxes%
+set ftotalboxes=%_fn%
+
 call :makeSVGfilename
 call :escapeSVGspecialcharacters %2
 call :makeSVGhead
@@ -50,7 +59,8 @@ set /A x_count=%1+118
 set /A y_count=y_offset+83
 if {%3}=={} (set /A partcount=box*qtyperbox
 ) else ( set /A partcount=%3 )
-call :makeSVGbox %1 %y_offset% %x_text% %y_text% %box% %x_count% %y_count% %partcount%
+call :formatnumber %partcount%
+call :makeSVGbox %1 %y_offset% %x_text% %y_text% %box% %x_count% %y_count% "%_fn%"
 set /A box+=1
 goto :eof
 
@@ -63,7 +73,8 @@ set /A y=y_offset+80
 call :makeSVGline %x% %y_offset% %1 %y%
 set /A x-=10
 set /A y-=10
-call :makeSVGpartialcount %x% %y% %qtyinpartialbox%
+call :formatnumber %qtyinpartialbox%
+call :makeSVGpartialcount %x% %y% "%_fn%"
 goto :eof
 
 :validatenumber
@@ -75,6 +86,19 @@ for /F "delims=0123456789" %%I in ("%_n%") do set _nan=%%J
 if not defined _nan if %_n% GTR 0 goto :eof
 echo %2 [%1] must be a natural number
 set _n=
+goto :eof
+
+:formatnumber
+rem Format a number: 1234 => 1,234
+rem _fn contains the formated string
+
+if {%1}=={} (echo %0 needs an argument) & goto :eof
+
+if %1 LSS 1000 (set _fn=%1) & goto :eof
+set /A _n=%1/1000
+call :formatnumber %_n%
+set _last3=%1
+set _fn=%_fn%,%_last3:~-3%
 goto :eof
 
 :makeSVGfilename
@@ -131,15 +155,15 @@ goto :eof
 :makepageheader
 echo   ^<text x="96" y="%1" class="medium"^>Lot:  %lot:"=% ^</text^> >>%SVGFile%
 echo   ^<text x="400" y="%1" class="medium"^>Part Number:  %PN:"=% ^</text^> >>%SVGFile%
-echo   ^<text x="96" y="%2" class="medium"^>Total Parts:  %parts% ^</text^> >>%SVGFile%
-echo   ^<text x="400" y="%2" class="medium"^>Qty Per Box:  %qtyperbox% ^</text^> >>%SVGFile%
-echo   ^<text x="640" y="%2" class="medium"^>Boxes:  %totalboxes% ^</text^> >>%SVGFile%
+echo   ^<text x="96" y="%2" class="medium"^>Total Parts:  %fparts% ^</text^> >>%SVGFile%
+echo   ^<text x="400" y="%2" class="medium"^>Qty Per Box:  %fqtyperbox% ^</text^> >>%SVGFile%
+echo   ^<text x="640" y="%2" class="medium"^>Boxes:  %ftotalboxes% ^</text^> >>%SVGFile%
 goto :eof
 
 :makeSVGbox
 echo   ^<use x="%1" y="%2" href="#box"/^> >>%SVGFile%
 echo   ^<text x="%3" y="%4" text-anchor="middle" dominant-baseline="middle" class="heavy"^>%5^</text^> >>%SVGFile%
-echo   ^<text x="%6" y="%7" text-anchor="end" dominant-baseline="hanging" class="small"^>%8^</text^> >>%SVGFile%
+echo   ^<text x="%6" y="%7" text-anchor="end" dominant-baseline="hanging" class="small"^>%~8^</text^> >>%SVGFile%
 goto :eof
 
 
@@ -148,7 +172,7 @@ echo   ^<line x1="%1" y1="%2" x2="%3" y2="%4" stroke="black" stroke-width="2"/^>
 goto :eof
 
 :makeSVGpartialcount
-echo   ^<text x="%1" y="%2" text-anchor="end" class="heavy"^>%3^</text^> >>%SVGFile%
+echo   ^<text x="%1" y="%2" text-anchor="end" class="heavy"^>%~3^</text^> >>%SVGFile%
 goto :eof
 
 :usage
