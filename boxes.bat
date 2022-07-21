@@ -129,7 +129,7 @@ echo ^</svg^> >>%SVGFile%
 goto :eof
 
 :makepageheader
-echo   ^<text x="96" y="%1" class="medium"^>Lot:  %lot% ^</text^> >>%SVGFile%
+echo   ^<text x="96" y="%1" class="medium"^>Lot:  %lot:"=% ^</text^> >>%SVGFile%
 echo   ^<text x="400" y="%1" class="medium"^>Part Number:  %PN:"=% ^</text^> >>%SVGFile%
 echo   ^<text x="96" y="%2" class="medium"^>Total Parts:  %parts% ^</text^> >>%SVGFile%
 echo   ^<text x="400" y="%2" class="medium"^>Qty Per Box:  %qtyperbox% ^</text^> >>%SVGFile%
