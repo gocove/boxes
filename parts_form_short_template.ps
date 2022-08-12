@@ -1,0 +1,75 @@
+%!PS
+%/lot_number () def
+%/part_number () def
+%/total_parts () def
+%/qty_per_box () def
+
+/Times-Roman findfont 20 scalefont setfont
+/Times-Roman-Bold 22 selectfont
+220 743 moveto (End-of-Shift Report) show
+
+/Times-Roman 20 selectfont
+
+72 714 moveto (Lot #:   ) show lot_number show
+256 714 moveto (Part #:   ) show part_number show
+
+72 687 moveto (Qty per box:   ) show qty_per_box show
+340 687 moveto (Parts:  ) show total_parts show
+
+
+/form_table {
+	% The table outline
+	newpath 0 0 moveto 0 646 lineto 
+	244 646 lineto 244 0 lineto closepath stroke
+	% Line count
+	newpath 18 0 moveto 18 646 lineto stroke
+	% Partial box (#, count)
+	newpath 62 0 moveto 62 646 lineto stroke
+	% Partial box/Date,shift,operator separator
+	newpath 116 0 moveto 116 646 lineto stroke
+	% Date, shift, operator
+	newpath 186 0 moveto 186 621 lineto stroke
+	newpath 204 0 moveto 204 621 lineto stroke
+	/Times-Roman 14 selectfont
+	22 627 moveto (Box #) show
+	76 627 moveto (Parts) show
+	121 627 moveto (Date, Shift, Operator) show
+
+	/n 23 def
+	1 setlinewidth
+	1 1 n {
+		newpath
+		27 mul 0 exch moveto
+		244 0 rlineto stroke
+	} for
+
+
+} def
+gsave
+	64 27 translate form_table
+grestore
+gsave
+	332 27 translate form_table
+grestore
+/s 2 string def
+/enumerate {
+	/Times-Roman 12 selectfont
+	% the table is filled from the bottom up
+	dup % last number
+	0 1 22 {
+		dup % index
+       		27 mul 0 exch moveto 
+		sub % last number - index
+		s cvs show
+		dup % last number
+	} for
+} def
+gsave
+	67 35 translate 23 enumerate
+grestore
+gsave
+	335 35 translate 46 enumerate
+grestore
+
+showpage
+
