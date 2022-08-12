@@ -11,13 +11,16 @@ if not exist %template% (
 	goto :eof
 )
 set psfile="parts.ps"
-echo %%!  >%psfile%
+echo %%!PS  >%psfile%
 rem Dequote arguments
 echo /lot_number (%~1) def >>%psfile%
 echo /part_number (%~2) def  >>%psfile%
 echo /total_parts (%~3) def  >>%psfile%
 echo /qty_per_box (%~4) def >>%psfile%
 type %template% >>%psfile%
+
+rem Print the PS file here
+
 goto :eof
 
 :usage
