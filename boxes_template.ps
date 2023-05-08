@@ -1,0 +1,97 @@
+% %!PS
+
+% /totalParts 1000 def
+% /partsPerBox 200 def
+% /lotNumber () def
+% /partNumber () def
+% /pressNumber () def
+
+%---------------------------------
+/boxesPerLine 5 def
+/linesPerPage 6 def
+
+/numOfBoxes totalParts partsPerBox div ceiling cvi def
+/numOfPages numOfBoxes boxesPerLine linesPerPage mul div ceiling cvi def
+/currentBox 0 def
+
+/showHeader {
+	/Times-Roman findfont 18 scalefont setfont
+	/partsStr (Parts: ) def
+	/partsPerBoxStr (Parts Per Box: ) def
+	/boxesStr (Boxes: ) def
+	/lotStr (Lot #: ) def
+	/partStr (Part #: ) def
+	/pressStr (Press: ) def
+	/y 0 def
+	0 y moveto partsStr show totalParts 10 string cvs show
+	160 y moveto partsPerBoxStr show partsPerBox 7 string cvs show
+	400 y moveto boxesStr show numOfBoxes 4 string cvs show
+	/y y 28 add def
+	0 y moveto (Lot #: ) show lotNumber show
+	160 y moveto (Part #: ) show partNumber show
+	400 y moveto (Press: ) show pressNumber show
+} def
+
+/showBox {
+	/Times-Roman findfont 10 scalefont setfont
+	0.8 setlinewidth
+	/dx 94 def
+	/dy 80 def
+	/bottomMargin 12 def
+	newpath
+	0 bottomMargin moveto 
+	dx 0 rlineto 0 dy rlineto dx neg 0 rlineto closepath stroke
+	14 78 10 0 360 arc stroke
+	14 78 moveto
+ 	currentBox 4 string cvs dup
+	stringwidth pop 2 div neg -3 rmoveto show
+	currentBox numOfBoxes eq 
+		{ totalParts
+	 		totalParts partsPerBox mod dup 0 ne 
+			{ 0 bottomMargin dx dy markPartial } if }
+		{ currentBox partsPerBox mul }ifelse
+	/Time-Roman findfont 8 scalefont setfont
+	dx bottomMargin moveto
+	8 string cvs dup stringwidth pop neg 8 neg rmoveto show
+
+} def
+/markPartial {
+	% parts(int) x1 y1 x2 y2 markPartial
+	/partialDict 4 dict def
+	partialDict begin
+		/y2 exch def /x2 exch def /y1 exch def /x1 exch def
+		x1 y1 moveto x2 y2 rlineto stroke
+		/Times-Bold findfont 12 scalefont setfont
+		x2 y1 moveto -2 2 rmoveto % Bottom right corner
+		6 string cvs dup stringwidth pop neg 0 rmoveto show
+	end
+} def
+numOfPages {
+	% Page header
+	%
+	gsave 36 720 translate showHeader grestore
+
+	numOfBoxes currentBox sub dup boxesPerLine linesPerPage mul lt 
+		{/lines exch boxesPerLine div ceiling cvi def}
+		{/lines linesPerPage def} ifelse
+		
+	/yTop 600 def
+	yTop -114 dup lines 1 sub mul yTop add {
+		gsave
+		1 setlinewidth
+		36 exch translate 
+		numOfBoxes currentBox sub dup boxesPerLine lt
+			{/boxes exch def}
+			{/boxes boxesPerLine def} ifelse
+		0 111 dup boxes 1 sub mul {
+			/currentBox currentBox 1 add def
+			gsave 
+			0 translate
+			showBox
+			grestore
+		} for 
+		grestore
+	} for
+	showpage
+} repeat
+
